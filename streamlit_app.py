@@ -36,7 +36,7 @@ def main():
     dims = st.checkbox("Show Dimensions")
     if(dims):
         st.write("Dimensions")
-        st.write(f"Rows:{},Columns:{}",df.shape[0],df.shape[1])
+        st.write(f"Rows:{df.shape[0]},Columns:{df.shape[1]}")
 
     st.subheader("Columns show")
     if st.checkbox("Select Columns To Show"):
