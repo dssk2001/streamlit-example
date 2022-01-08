@@ -16,8 +16,7 @@ def main():
     data = st.sidebar.file_uploader(label="Upload only csv files",type=['csv'])
     if(data) is not None:
         df = pd.read_csv(data)
-        #st.write(df)
-
+        
     # Viewing Rows
     st.subheader("See rows of data")
     if(st.checkbox('See Rows')):
@@ -37,7 +36,7 @@ def main():
     dims = st.checkbox("Show Dimensions")
     if(dims):
         st.write("Dimensions")
-        st.write(df.shape[0],df.shape[1])
+        st.write(f"Rows:{},Columns:{}",df.shape[0],df.shape[1])
 
     st.subheader("Columns show")
     if st.checkbox("Select Columns To Show"):
@@ -64,8 +63,7 @@ def main():
         st.write(df.describe())
 
     st.sidebar.subheader("Data Visualization")
-    # Correlation
-    # Seaborn Plot
+    # Correlation Seaborn Plot
     if st.sidebar.checkbox("Correlation Plot[Seaborn]"):
         st.write(sns.heatmap(df.corr(), annot=True))
         st.pyplot()
@@ -92,7 +90,8 @@ def main():
                 vc_plot = df.iloc[:, -1].value_counts()
             st.write(vc_plot.plot(kind="bar"))
             st.pyplot()
-
+    
+    #own Customizable Plots
     st.subheader("Customizable Plot")
     all_columns_names = df.columns.tolist()
     type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
