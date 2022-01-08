@@ -1,38 +1,106 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-"""
-# Welcome to Streamlit!
+#configs
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+def main():
+    global df
+    st.title("EDA for Dataset with streamlit")
+    st.header("Start by Uploading your file and selecting various options to explore data")
+    st.sidebar.subheader("File Uploading Options")
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+    data = st.sidebar.file_uploader(label="Upload only csv files",type=['csv'])
+    if(data) is not None:
+        df = pd.read_csv(data)
+        #st.write(df)
 
+    # Viewing Rows
+    st.subheader("See rows of data")
+    if(st.checkbox('See Rows')):
+        st.header("Data Rows")
+        rows = st.number_input("Number of rows to view from head:",value=5)
+        st.dataframe(df.head(rows))
 
-with st.echo(code_location='below'):
-    total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-    num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+    # Viewing Columns
+    st.subheader("View Columns")
+    cols = st.checkbox("Column Names")
+    if(cols):
+        st.header("Columns Data")
+        st.write(df.columns)
 
-    Point = namedtuple('Point', 'x y')
-    data = []
+    # Viewing Dimensions
+    st.subheader("View Dimensions")
+    dims = st.checkbox("Show Dimensions")
+    if(dims):
+        st.write("Dimensions")
+        st.write(df.shape[0],df.shape[1])
 
-    points_per_turn = total_points / num_turns
+    st.subheader("Columns show")
+    if st.checkbox("Select Columns To Show"):
+        all_columns = df.columns.tolist()
+        selected_columns = st.multiselect("Select", all_columns)
+        new_df = df[selected_columns]
+        st.dataframe(new_df)
 
-    for curr_point_num in range(total_points):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
+        # Show Values
+    st.subheader("Counts of classes")
+    if st.button("Value Counts"):
+        st.text("Value Counts By Target/Class")
+        st.write(df.iloc[:, -1].value_counts())
 
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+        # Show Datatypes
+    st.subheader("See Data Types")
+    if st.button("Data Types"):
+        st.write(df.dtypes)
+
+        # Show Summary
+    st.subheader("Summary of Dataset")
+    summary_box = st.checkbox("Summary")
+    if summary_box:
+        st.write(df.describe())
+
+    st.sidebar.subheader("Data Visualization")
+    # Correlation
+    # Seaborn Plot
+    if st.sidebar.checkbox("Correlation Plot[Seaborn]"):
+        st.write(sns.heatmap(df.corr(), annot=True))
+        st.pyplot()
+
+    # Pie Chart
+    if st.sidebar.checkbox("Pie Plot"):
+        all_columns_names = df.columns.tolist()
+        if st.sidebar.button("Generate Pie Plot"):
+            st.success("Generating A Pie Plot")
+            st.write(df.iloc[:, -1].value_counts().plot.pie(autopct="%1.1f%%"))
+            st.pyplot()
+
+    # Count Plot
+    if st.sidebar.checkbox("Plot of Value Counts"):
+        st.text("Value Counts By Target")
+        all_columns_names = df.columns.tolist()
+        primary_col = st.selectbox("Primary Columm to GroupBy", all_columns_names)
+        selected_columns_names = st.multiselect("Select Columns", all_columns_names)
+        if st.sidebar.button("Plot"):
+            st.text("Generate Plot")
+            if selected_columns_names:
+                vc_plot = df.groupby(primary_col)[selected_columns_names].count()
+            else:
+                vc_plot = df.iloc[:, -1].value_counts()
+            st.write(vc_plot.plot(kind="bar"))
+            st.pyplot()
+
+    st.subheader("Customizable Plot")
+    all_columns_names = df.columns.tolist()
+    type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
+    selected_columns_names = st.multiselect("Select Columns To Plot", all_columns_names)
+    if st.button("Generate Plot"):
+        st.success("Generating Customizable Plot of {} for {}".format(type_of_plot, selected_columns_names))
+        cust_plot = df[selected_columns_names].plot(kind=type_of_plot)
+        st.write(cust_plot)
+        st.pyplot()
+if __name__ == '__main__':
+    main()
