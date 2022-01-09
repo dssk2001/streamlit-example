@@ -97,7 +97,7 @@ def main():
     type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
     selected_columns_names = st.multiselect("Select Columns To Plot", all_columns_names)
     if st.button("Generate Plot"):
-        st.success("Generating Customizable Plot of {} for {}".format(type_of_plot, selected_columns_names))
+        st.success("Generating Plot of {} for {}".format(type_of_plot, selected_columns_names))
         cust_plot = df[selected_columns_names].plot(kind=type_of_plot)
         st.write(cust_plot)
         st.pyplot()
