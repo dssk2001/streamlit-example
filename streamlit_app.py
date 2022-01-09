@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 #configs
@@ -93,13 +92,16 @@ def main():
     
     #own Customizable Plots
     st.subheader("Customizable Plot")
-    all_columns_names = df.columns.tolist()
-    type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
-    selected_columns_names = st.multiselect("Select Columns To Plot", all_columns_names)
-    if st.button("Generate Plot"):
-        st.success("Generating Plot of {} for {}".format(type_of_plot, selected_columns_names))
-        cust_plot = df[selected_columns_names].plot(kind=type_of_plot)
-        st.write(cust_plot)
-        st.pyplot()
+    try:
+        all_columns_names = df.columns.tolist()
+        type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
+        selected_columns_names = st.multiselect("Select Columns To Plot", all_columns_names)
+        if st.button("Generate Plot"):
+            st.success("Generating Plot of {} for {}".format(type_of_plot, selected_columns_names))
+            cust_plot = df[selected_columns_names].plot(kind=type_of_plot)
+            st.write(cust_plot)
+            st.pyplot()
+    except:
+        pass
 if __name__ == '__main__':
     main()
