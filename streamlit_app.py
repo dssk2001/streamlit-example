@@ -91,9 +91,10 @@ def main():
             st.pyplot()
     
     #own Customizable Plots
-    st.subheader("Customizable Plot")
+    
     try:
         all_columns_names = df.columns.tolist()
+        st.subheader("Customizable Plot")
         type_of_plot = st.selectbox("Select Type of Plot", ["area", "bar", "line", "hist", "box", "kde","scatter"])
         selected_columns_names = st.multiselect("Select Columns To Plot", all_columns_names)
         if st.button("Generate Plot"):
