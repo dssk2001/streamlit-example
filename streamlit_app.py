@@ -56,9 +56,9 @@ def main():
                 st.write(df.iloc[:, -1].value_counts())
 
                 # Show Datatypes
-            st.subheader("See Data Types")
-            if st.button("Data Types"):
-                st.write(df.dtypes)
+#             st.subheader("See Data Types")
+#             if st.button("Data Types"):
+#                 st.write(df.dtypes)
 
                 # Show Summary
             st.subheader("Summary of Dataset")
@@ -110,7 +110,6 @@ def main():
             except:
                 pass
         except Exception as e:
-            st.write(e)
             st.write("Enter Data to Begin")
 
 
