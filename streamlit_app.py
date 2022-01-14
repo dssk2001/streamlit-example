@@ -110,6 +110,7 @@ def main():
             except:
                 pass
         except Exception as e:
+            print(e)
             st.write("Enter Data to Begin")
 
 
