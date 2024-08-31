@@ -4,8 +4,6 @@ import seaborn as sns
 
 # configs
 
-st.set_option('deprecation.showPyplotGlobalUse', False)
-
 
 def main():
     global df
